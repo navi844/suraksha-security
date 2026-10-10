@@ -123,17 +123,37 @@ def load_html(path: Path) -> list[SourceDocument]:
 
 def load_csv(path: Path) -> list[SourceDocument]:
     with path.open('r', encoding='utf-8', newline='') as handle:
-        lines = handle.readlines()
+        lines = [line.rstrip('\n') for line in handle]
 
-    cleaned = []
+    cleaned: list[str] = []
     for line in lines:
-        if line.strip().startswith('Document ID:') or line.strip().startswith('Version:') or line.strip().startswith('Effective Date:'):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith('#'):
+            continue
+        if stripped.startswith('Document ID:') or stripped.startswith('Version:') or stripped.startswith('Effective Date:'):
             continue
         cleaned.append(line)
 
-    reader = csv.DictReader(cleaned)
+    if not cleaned:
+        raise ValueError(f'CSV document is empty or contains only metadata rows: {path}')
+
+    header_line = None
+    data_lines = []
+    for line in cleaned:
+        if line.strip().lower().startswith('incident_id,'):
+            header_line = line
+            data_lines = cleaned[cleaned.index(line) + 1:]
+            break
+
+    if header_line is None:
+        raise ValueError(f'CSV document does not include the required header row in {path}')
+
+    reader = csv.DictReader(data_lines, fieldnames=[value.strip() for value in header_line.split(',')])
     required = ['incident_id', 'date', 'category', 'severity', 'status', 'summary']
-    if reader.fieldnames is None or any(field not in (reader.fieldnames or []) for field in required):
+    fieldnames = [name.strip() for name in header_line.split(',')]
+    if any(field not in fieldnames for field in required):
         raise ValueError(f'Missing required CSV columns in {path}')
 
     rows: list[SourceDocument] = []

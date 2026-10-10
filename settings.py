@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -20,14 +19,19 @@ class Settings(BaseSettings):
     CHROMA_DIR: str = './chroma_store'
     CHROMA_COLLECTION: str = 'suraksha_security_policies'
     AUDIT_DB_PATH: str = './audit_log.db'
+
     EMBEDDING_MODEL: str = 'all-MiniLM-L6-v2'
+    USE_OPENAI_EMBEDDINGS: bool = True
+
     OPENAI_API_KEY: str = ''
     OPENAI_MODEL: str = 'gpt-4o-mini'
     OPENAI_EMBEDDING_MODEL: str = 'text-embedding-3-small'
-    LLM_MODE: Literal['mock', 'openai_compatible'] = 'mock'
-    LLM_BASE_URL: str = ''
+
+    LLM_MODE: Literal['mock', 'openai_compatible'] = 'openai_compatible'
+    LLM_BASE_URL: str = 'https://api.openai.com/v1'
     LLM_API_KEY: str = ''
-    LLM_MODEL: str = ''
+    LLM_MODEL: str = 'gpt-4o-mini'
+
     RETRIEVAL_K: int = 5
     RETRIEVAL_CANDIDATES: int = 10
     MIN_CONFIDENCE_SCORE: float = 0.45
@@ -40,16 +44,15 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = 'INFO'
 
     def model_post_init(self, __context):
-        if self.OPENAI_API_KEY and self.LLM_MODE == 'mock':
-            self.LLM_MODE = 'openai_compatible'
-        if not self.LLM_BASE_URL and self.OPENAI_API_KEY:
+        if self.OPENAI_API_KEY:
             self.LLM_BASE_URL = 'https://api.openai.com/v1'
-        if not self.LLM_API_KEY:
             self.LLM_API_KEY = self.OPENAI_API_KEY
-        if not self.LLM_MODEL:
-            self.LLM_MODEL = self.OPENAI_MODEL
-        if self.OPENAI_EMBEDDING_MODEL and self.EMBEDDING_MODEL in {'', 'all-MiniLM-L6-v2'}:
+            self.LLM_MODEL = self.OPENAI_MODEL or 'gpt-4o-mini'
+            self.USE_OPENAI_EMBEDDINGS = True
             self.EMBEDDING_MODEL = self.OPENAI_EMBEDDING_MODEL
+        else:
+            self.USE_OPENAI_EMBEDDINGS = False
+            self.EMBEDDING_MODEL = 'all-MiniLM-L6-v2'
 
     @property
     def documents_dir(self) -> Path:
