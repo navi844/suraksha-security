@@ -1,0 +1,42 @@
+{
+  "document_id": "SUR-AVR-005",
+  "version": "1.0",
+  "effective_date": "2026-06-01",
+  "classification": "FICTIONAL TRAINING SAMPLE",
+  "vendor_categories": [
+    {
+      "category_name": "Customer Data Processor",
+      "required_certifications": [
+        "ISO/IEC 27001",
+        "SOC 2 Type II"
+      ],
+      "data_handling_requirements": [
+        "encrypt customer data in transit and at rest",
+        "apply least-privilege access",
+        "notify the fictional company of a confirmed security incident within 24 hours",
+        "securely delete or return data when service ends"
+      ],
+      "review_frequency": "Annual, with an additional review after a material security incident."
+    },
+    {
+      "category_name": "Infrastructure Service Provider",
+      "required_certifications": [
+        "ISO/IEC 27001"
+      ],
+      "data_handling_requirements": [
+        "restrict privileged access via approved access control and logging"
+      ],
+      "review_frequency": "Annual"
+    },
+    {
+      "category_name": "Low-Risk Business Service",
+      "required_certifications": [
+        "documented security self-assessment"
+      ],
+      "data_handling_requirements": [
+        "limit data exposure to the minimum necessary"
+      ],
+      "review_frequency": "Every two years"
+    }
+  ]
+}

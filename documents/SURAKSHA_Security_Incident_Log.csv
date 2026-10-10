@@ -1,0 +1,13 @@
+Document ID: SUR-SIL-004
+Version: 1.0
+Effective Date: 2026-09-30
+
+incident_id,date,category,severity,status,summary
+SEC-2026-002,2026-08-18,Phishing,High,Open,Mailbox access investigation remains active
+SEC-2026-004,2026-09-02,Unauthorised Access,Critical,Open,Privileged account activity under investigation
+SEC-2026-006,2026-09-17,Malware,Medium,Open,Endpoint containment verification pending
+SEC-2026-008,2026-09-29,Data Handling,Low,Open,Incorrect document-sharing permissions under review
+SEC-2026-001,2026-07-15,Phishing,Medium,Resolved,User reported a suspicious email and blocked the message
+SEC-2026-003,2026-08-05,Misconfiguration,Low,Resolved,Firewall rule corrected after alert review
+SEC-2026-005,2026-08-22,Policy Violation,Medium,Resolved,Unapproved device removed from network access
+SEC-2026-007,2026-09-10,Malware,High,Resolved,Endpoint isolated and clean-up completed
